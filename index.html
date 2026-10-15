@@ -521,23 +521,38 @@ function pintaSemana(){
     met('Descanso medio',o.desc.toFixed(1).replace('.',',')+'/5','');
 }
 function textoSemana(){
-  var o=datosSemana(semIni),fin=sumaDias(semIni,6),L=[],hor=D.horario||'dia';
-  L.push('🌙 SONO '+D.codigo+' · semana '+dm(semIni)+'–'+dma(fin));
-  L.push('Idade: '+(D.idade==='65'?'65+':D.idade)+' · Horario: '+HOR[hor]);
-  if(hor!=='dia') L.push('⚠️ Traballo nocturno/quendas: os cortes de referencia son de persoas que dormen de noite; interpretar con prudencia.');
-  L.push('Días rexistrados: '+o.n+'/7');
-  L.push('Media durmida (total do día): '+hm(o.media));
-  L.push('Días < 7 h: '+o.baixo+' de '+o.n);
-  if(o.nex) L.push('Días con outros sonos (sesta/sono partido): '+o.nex);
-  L.push('Eficiencia media (sono principal): '+o.ef+' %');
-  L.push('Regularidade (DE circular, sono principal): deitarse ± '+(o.sdD===null?'—':Math.round(o.sdD)+' min')+' · levantarse ± '+(o.sdL===null?'—':Math.round(o.sdL)+' min'));
-  L.push('Descanso medio: '+o.desc.toFixed(1).replace('.',',')+'/5');
-  L.push('');L.push('Detalle sono principal (deitarse–levantarse · durmido · eficiencia · latencia · espertares · tempo esperto · descanso) + outros sonos:');
-  o.dias.forEach(function(x){var dd=deIso(x.d);if(x.d>hoxe())return;if(!x.r){L.push(DS[dd.getDay()]+' '+dm(x.d)+': sen rexistro');return;}var r=x.r,c=calc(r);
-    var t=DS[dd.getDay()]+' '+dm(x.d)+': '+r.deitar+'–'+r.levantar+' · '+hmC(c.sono)+' · '+c.ef+' % · '+r.lat+' min · '+r.esp+' · '+r.waso+' min · '+r.desc+'/5';
-    (r.extra||[]).forEach(function(e){t+=' + sono '+e.ini+'–'+e.fin+' ('+hmC(durX(e))+')';});
-    if(r.extra&&r.extra.length) t+=' = total '+hmC(totalDia(r));
-    L.push(t);});
+  var o=datosSemana(semIni),fin=sumaDias(semIni,6),L=[],hor=D.horario||'dia',hx=hoxe();
+  var IDT={'18-25':'18–25 anos','26-64':'26–64 anos','65':'65 anos ou máis'},HT={dia:'de día',noite:'de noite (fixo)',quendas:'de quendas rotativas'};
+  function d1(x){return (Math.round(x*10)/10).toString().replace('.',',');}
+  function cap(t){return t.charAt(0).toUpperCase()+t.slice(1);}
+  var pasados=o.dias.filter(function(x){return x.d<=hx;});
+  L.push('🌙 SONO '+D.codigo+' · '+dm(semIni)+'–'+dma(fin));
+  L.push(IDT[D.idade]+' · Horario '+HT[hor]);
+  if(hor!=='dia') L.push('⚠️ Traballa de noite ou a quendas: os valores de referencia son de persoas que dormen de noite; interpretar con prudencia.');
+  L.push('');
+  L.push('📊 RESUMO ('+o.n+' de '+pasados.length+' días)');
+  L.push('Media durmida: '+hm(o.media));
+  L.push('Días con menos de 7 h: '+o.baixo);
+  if(o.nex) L.push('Días con sesta ou sono partido: '+o.nex);
+  L.push('Eficiencia media: '+o.ef+' %');
+  L.push('Regularidade: '+(o.sdD===null?'faltan datos (mínimo 2 días)':'deitarse ± '+Math.round(o.sdD)+' min · levantarse ± '+Math.round(o.sdL)+' min'));
+  L.push('Descanso medio: '+d1(o.desc)+'/5');
+  L.push('');
+  L.push('📅 DÍA A DÍA');
+  var sen=[];
+  pasados.forEach(function(x){var dd=deIso(x.d);
+    if(!x.r){sen.push(DS[dd.getDay()]+' '+dd.getDate());return;}
+    var r=x.r,c=calc(r);
+    L.push(cap(DS[dd.getDay()])+' '+dm(x.d));
+    L.push('  Cama '+r.deitar+' → '+r.levantar+' · durmiu '+hm(c.sono)+' ('+c.ef+' %)');
+    L.push('  Tardou '+r.lat+' min · '+r.esp+' espertar'+(r.esp===1?'':'es')+' · '+r.waso+' min esperto');
+    (r.extra||[]).forEach(function(e){L.push('  Outro sono '+e.ini+' → '+e.fin+' ('+hm(durX(e))+')');});
+    if(r.extra&&r.extra.length) L.push('  Total do día: '+hm(totalDia(r)));
+    L.push('  Descanso '+r.desc+'/5');
+    L.push('');
+  });
+  if(sen.length) L.push('Sen rexistro: '+sen.join(', '));
+  while(L.length&&L[L.length-1]==='') L.pop();
   return L.join('\n');
 }
 function abreWA(t){window.location.href='https://wa.me/'+WA+'?text='+encodeURIComponent(t);}
