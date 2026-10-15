@@ -133,7 +133,7 @@ ol.inst li{margin-bottom:4px}
   <section class="pant on" id="p-rexistro">
     <div class="aviso" id="avisoInstalar" hidden></div>
     <div class="aviso am" id="avisoHabitos" hidden>Toca revisar os teus hábitos deste mes. <a href="#" data-ir="habitos">Facelo agora</a></div>
-    <h2>Como durmiches?</h2>
+    <h2>Como foi o teu descanso?</h2>
     <div class="card">
       <div class="hoxe" id="panelHoxe">
         <div class="hx-d" id="hxData"></div>
@@ -164,7 +164,7 @@ ol.inst li{margin-bottom:4px}
         <div class="step"><button type="button" data-st="fWaso" data-d="-5">−</button><input type="number" id="fWaso" inputmode="numeric" min="0" max="900" placeholder="—"><button type="button" data-st="fWaso" data-d="5">+</button><span class="uni">min</span></div>
       </div>
       <div class="campo">
-        <span class="lab">Como foi o teu descanso?</span>
+        <span class="lab">Valora o teu descanso do 1 ao 5</span>
         <div class="escala" id="fDesc">
           <button type="button" data-v="1"><b>1</b><span>Moi mal</span></button>
           <button type="button" data-v="2"><b>2</b><span>Mal</span></button>
@@ -461,7 +461,7 @@ $('bGardar').onclick=function(){
   if(r.esp===null){e.textContent='Indica cantas veces espertaches (0 se ningunha).';return;}
   if(r.waso===null){e.textContent='Indica o tempo esperto durante o sono (0 se nada).';return;}
   if(r.esp>0&&r.waso===0){e.textContent='Se espertaches máis de 5 min, o tempo esperto non pode ser 0.';return;}
-  if(!r.desc){e.textContent='Indica como foi o teu descanso (1 a 5).';return;}
+  if(!r.desc){e.textContent='Valora o teu descanso do 1 ao 5.';return;}
   var c=calc(r);
   if(c.tib>16*60){e.textContent='Revisa as horas: sae máis de 16 h na cama.';return;}
   if(c.sono<=0){e.textContent='Revisa os datos: o tempo en durmir e esperto supera o tempo na cama.';return;}
