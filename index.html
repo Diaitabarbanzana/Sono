@@ -91,6 +91,12 @@ input:focus,select:focus{outline:2px solid var(--azul);outline-offset:1px}
 .preg{padding:14px 0;border-bottom:1px solid var(--liña)}
 .preg:last-of-type{border-bottom:0}
 .preg .q{font-weight:600;margin-bottom:8px}
+.hoxe{background:var(--azul-cl);border:1px solid #bfe3f7;border-radius:14px;padding:12px 14px;margin-bottom:16px;text-align:center}
+.hx-d{font-weight:700;font-size:18px;text-transform:none}
+.hx-h{font-size:28px;font-weight:700;color:var(--azul-esc);line-height:1.2}
+.hx-ed{font-weight:600;color:var(--amar);margin-top:4px}
+.hx-b{border:0;background:none;color:var(--azul-esc);text-decoration:underline;font-size:14px;margin-top:6px;padding:6px}
+#outroDia{margin-top:8px;text-align:left}
 .hab{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--liña)}
 .hab:last-child{border-bottom:0}
 .hab .tx{flex:1}
@@ -129,17 +135,22 @@ ol.inst li{margin-bottom:4px}
     <div class="aviso am" id="avisoHabitos" hidden>Toca revisar os teus hábitos deste mes. <a href="#" data-ir="habitos">Facelo agora</a></div>
     <h2>Como durmiches?</h2>
     <div class="card">
-      <div class="campo">
-        <label for="fData">Día no que espertaches</label>
-        <input type="date" id="fData">
-        <div class="peq" id="fDataTx"></div>
+      <div class="hoxe" id="panelHoxe">
+        <div class="hx-d" id="hxData"></div>
+        <div class="hx-h" id="hxHora"></div>
+        <div class="hx-ed" id="hxEdit" hidden></div>
+        <button type="button" class="hx-b" id="bOutroDia">Rexistrar ou cambiar outro día</button>
+        <div id="outroDia" hidden>
+          <label for="fData" class="peq">Día no que espertaches</label>
+          <input type="date" id="fData">
+        </div>
       </div>
       <div class="fila2">
-        <div class="campo"><label for="fDeitar">Deitácheste ás</label><input type="time" id="fDeitar"></div>
+        <div class="campo"><label for="fDeitar" id="labDeitar">Deitácheste ás</label><input type="time" id="fDeitar"></div>
         <div class="campo"><label for="fLevantar">Levantácheste ás</label><input type="time" id="fLevantar"></div>
       </div>
       <div class="campo">
-        <label for="fLat">Canto tardaches en durmir?</label>
+        <label for="fLat">Canto tardaches en quedarte durmido/a (+ ou -)?</label>
         <div class="step"><button type="button" data-st="fLat" data-d="-5">−</button><input type="number" id="fLat" inputmode="numeric" min="0" max="600" placeholder="—"><button type="button" data-st="fLat" data-d="5">+</button><span class="uni">min</span></div>
       </div>
       <div class="campo">
@@ -153,7 +164,7 @@ ol.inst li{margin-bottom:4px}
         <div class="step"><button type="button" data-st="fWaso" data-d="-5">−</button><input type="number" id="fWaso" inputmode="numeric" min="0" max="900" placeholder="—"><button type="button" data-st="fWaso" data-d="5">+</button><span class="uni">min</span></div>
       </div>
       <div class="campo">
-        <span class="lab">Como descansaches?</span>
+        <span class="lab">Como foi o teu descanso?</span>
         <div class="escala" id="fDesc">
           <button type="button" data-v="1"><b>1</b><span>Moi mal</span></button>
           <button type="button" data-v="2"><b>2</b><span>Mal</span></button>
@@ -243,7 +254,7 @@ ol.inst li{margin-bottom:4px}
 
     <div class="card">
       <h3 style="margin-top:0">Copia de seguridade</h3>
-      <p class="peq" style="margin-top:0">Os teus datos están só neste teléfono. Se cambias de móbil ou borras os datos do navegador, pérdense. Descarga unha copia de cando en vez.</p>
+      <p class="peq" style="margin-top:0">Os teus datos están só neste teléfono. Se cambias de móbil ou borras os datos do navegador, pérdense. Descarga unha copia de vez en cando.</p>
       <button class="btn sec" id="bExport">Descargar copia</button>
       <button class="btn sec" id="bImport">Restaurar copia</button>
       <input type="file" id="fImport" accept="application/json,.json" hidden>
@@ -261,7 +272,7 @@ ol.inst li{margin-bottom:4px}
 
     <div class="card">
       <h3 style="margin-top:0">Privacidade</h3>
-      <p class="peq" style="margin:0">Esta app non ten servidor nin contas. O que rexistras queda só neste teléfono e só sae cando ti envías un resumo por WhatsApp, identificado co teu código. Esta app non diagnostica: se durmes mal de forma continuada, ronca moito ou tes moito sono durante o día, coméntao co teu médico.</p>
+      <p class="peq" style="margin:0">Esta app non ten servidor nin contas. O que rexistras queda só neste teléfono e só sae cando ti envías un resumo por WhatsApp, identificado co teu código. Esta app non diagnostica: se durmes mal de forma continuada, roncas moito ou tes moito sono durante o día, coméntao co teu médico.</p>
     </div>
 
     <button class="btn perigo" id="bBorrarTodo">Borrar todos os datos</button>
@@ -394,11 +405,25 @@ $('fEsp').addEventListener('input',autoWaso);
 function autoWaso(){ if($('fEsp').value==='0'&&$('fWaso').value==='') $('fWaso').value=0; }
 $('fData').addEventListener('change',function(){cargaNoite($('fData').value);});
 
+var MES=['xaneiro','febreiro','marzo','abril','maio','xuño','xullo','agosto','setembro','outubro','novembro','decembro'];
+function dLongo(s){var d=deIso(s);return DL[d.getDay()]+' '+d.getDate()+' de '+MES[d.getMonth()];}
+function pintaPanel(){
+  var n=new Date(),dt=$('fData').value||hoxe(),txt=dLongo(hoxe());
+  $('hxData').textContent=txt.charAt(0).toUpperCase()+txt.slice(1);
+  $('hxHora').textContent=pad(n.getHours())+':'+pad(n.getMinutes());
+  var ed=$('hxEdit');
+  if(dt!==hoxe()){ed.innerHTML='Estás rexistrando o '+dLongo(dt)+' · <a href="#" id="bVoltarHoxe">volver a hoxe</a>';ed.hidden=false;}
+  else ed.hidden=true;
+  $('labDeitar').textContent=(D.horario||'dia')==='dia'?'Onte deitácheste ás':'Deitácheste ás';
+}
+setInterval(function(){if($('hxHora'))pintaPanel();},30000);
+$('bOutroDia').onclick=function(){var o=$('outroDia');o.hidden=!o.hidden;};
+document.addEventListener('click',function(e){if(e.target.id==='bVoltarHoxe'){e.preventDefault();$('outroDia').hidden=true;cargaNoite(hoxe());}});
 function cargaNoite(data){
   if(!data) return;
   $('fData').value=data;
   var dd=deIso(data);
-  $('fDataTx').textContent='Sono que remataches o '+DL[dd.getDay()]+' '+dd.getDate();
+  pintaPanel();
   var r=D.rexistros[data]; $('fErro').textContent='';
   if(r){ $('fDeitar').value=r.deitar;$('fLevantar').value=r.levantar;$('fLat').value=r.lat;$('fEsp').value=r.esp;$('fWaso').value=r.waso;desc=r.desc;extras=(r.extra||[]).slice();$('bGardar').textContent='Actualizar';$('bBorrarNoite').hidden=false;mostraRes(r);}
   else{
@@ -432,11 +457,11 @@ $('bGardar').onclick=function(){
   if(!data){e.textContent='Escolle a data.';return;}
   if(data>hoxe()){e.textContent='A data non pode ser futura.';return;}
   if(!r.deitar||!r.levantar){e.textContent='Indica a hora de deitarte e de levantarte.';return;}
-  if(r.lat===null){e.textContent='Indica canto tardaches en durmir (0 se foi ao momento).';return;}
+  if(r.lat===null){e.textContent='Indica canto tardaches en quedarte durmido/a (0 se foi ao momento).';return;}
   if(r.esp===null){e.textContent='Indica cantas veces espertaches (0 se ningunha).';return;}
   if(r.waso===null){e.textContent='Indica o tempo esperto durante o sono (0 se nada).';return;}
   if(r.esp>0&&r.waso===0){e.textContent='Se espertaches máis de 5 min, o tempo esperto non pode ser 0.';return;}
-  if(!r.desc){e.textContent='Indica como descansaches (1 a 5).';return;}
+  if(!r.desc){e.textContent='Indica como foi o teu descanso (1 a 5).';return;}
   var c=calc(r);
   if(c.tib>16*60){e.textContent='Revisa as horas: sae máis de 16 h na cama.';return;}
   if(c.sono<=0){e.textContent='Revisa os datos: o tempo en durmir e esperto supera o tempo na cama.';return;}
@@ -456,7 +481,7 @@ function mostraRes(r){
   $('resGrid').innerHTML=
     met(ex?'Total do día':'Durmiches',hm(t),t>=420?'g':'r',(t>=420?'7 h ou máis':'Menos de 7 h')+(ex?' · '+hm(c.sono)+' no principal':''))+
     met('Eficiencia',c.ef+' %',cor('ef',c.ef,id))+
-    met('Tardaches en durmir',r.lat+' min',cor('lat',r.lat,id))+
+    met('Tardaches en quedar durmido/a',r.lat+' min',cor('lat',r.lat,id))+
     met('Espertares (> 5 min)',r.esp,cor('esp',r.esp,id))+
     met('Tempo esperto',r.waso+' min',cor('waso',r.waso,id))+
     met('Tempo na cama',hm(c.tib),'');
@@ -473,7 +498,7 @@ function pintaLista(){
 $('listaNoites').addEventListener('click',function(e){var b=e.target.closest('[data-ed]');if(b){cargaNoite(b.getAttribute('data-ed'));window.scrollTo({top:0,behavior:'smooth'});}});
 function pintaRexistro(){
   $('fData').max=hoxe();
-  if(!$('fData').value) cargaNoite(hoxe());
+  if(!$('fData').value) cargaNoite(hoxe()); else pintaPanel();
   pintaLista(); avisos();
 }
 
@@ -560,16 +585,16 @@ $('bWaSem').onclick=function(){if(!datosSemana(semIni).n)return;abreWA(textoSema
 
 /* ---------- hábitos ---------- */
 var HAB=[
- {id:'pantallas',q:'Canto antes de deitarte deixas o móbil, a tablet ou a TV?',o:['Ata que durmo','30 min antes','1 h antes','2 h antes','Máis de 2 h antes'],ok:[2,3,4]},
+ {id:'pantallas',q:'Canto tempo antes de deitarte deixas de utilizar o móbil, a tablet ou a TV?',o:['Ata que durmo','30 min antes','1 h antes','2 h antes','Máis de 2 h antes'],ok:[2,3,4]},
  {id:'escuro',q:'O teu dormitorio está escuro?',o:['Si','Non'],ok:[0]},
  {id:'silencioso',q:'O teu dormitorio está silencioso?',o:['Si','Non'],ok:[0]},
  {id:'fresco',q:'O teu dormitorio está fresco?',o:['Si','Non'],ok:[0]},
- {id:'cea',q:'Canto tempo pasa entre a última comida importante e deitarte?',o:['Menos de 30 min','30–60 min','1–2 h','2–3 h','Máis de 3 h'],ok:[3,4]},
- {id:'cafeina',q:'Canto antes de deitarte tomas a última bebida con cafeína (café, té, refrescos de cola, bebidas enerxéticas)?',o:['Non tomo','Máis de 8 h antes','6–8 h antes','4–6 h antes','Menos de 4 h antes'],ok:[0,1,2]},
- {id:'alcol',q:'Nas 3 horas antes de deitarte, tomas alcol ou fumas?',o:['Nunca','Algún día','Case todos os días'],ok:[0]},
- {id:'exercicio',q:'Canto antes de deitarte rematas o exercicio intenso?',o:['Non adestro pola noite','Máis de 3 h antes','2–3 h antes','1–2 h antes','Menos de 1 h antes'],ok:[0,1,2,3]}
+ {id:'cea',q:'Canto tempo pasa entre a última comida e a hora de deitarte?',o:['Menos de 30 min','30–60 min','1–2 h','2–3 h','Máis de 3 h'],ok:[3,4]},
+ {id:'cafeina',q:'Cando tomas a última bebida con cafeína (café, té, refrescos, bebidas enerxéticas) do día?',o:['Non tomo','Máis de 8 h antes de deitarme','6–8 h antes de deitarme','4–6 h antes de deitarme','Menos de 4 h antes de deitarme'],ok:[0,1,2]},
+ {id:'alcol',q:'Nas tres horas antes de deitarte, tomas alcohol ou fumas?',o:['Nunca','Algún día','Case todos os días'],ok:[0]},
+ {id:'exercicio',q:'Canto tempo antes de deitarte deixas de facer exercicio intenso?',o:['Non adestro pola noite','Máis de 3 h antes','2–3 h antes','1–2 h antes','Menos de 1 h antes'],ok:[0,1,2,3]}
 ];
-var CURTO={pantallas:'Pantallas',escuro:'Dormitorio escuro',silencioso:'Dormitorio silencioso',fresco:'Dormitorio fresco',cea:'Última comida',cafeina:'Cafeína',alcol:'Alcol / tabaco',exercicio:'Exercicio intenso'};
+var CURTO={pantallas:'Pantallas',escuro:'Dormitorio escuro',silencioso:'Dormitorio silencioso',fresco:'Dormitorio fresco',cea:'Última comida',cafeina:'Cafeína',alcol:'Alcohol / tabaco',exercicio:'Exercicio intenso'};
 var hResp={};
 function pintaHabitos(){
   var h='';
