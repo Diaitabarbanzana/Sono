@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="gl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sono · Díaita</title>
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sono Díaita">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{
+  --azul:#2fa8e8; --azul-esc:#1679b3; --azul-cl:#e8f5fd;
+  --tinta:#16324a; --suave:#5d7387; --liña:#dde7ef; --fondo:#f6f9fc; --branco:#fff;
+  --verde:#1f9d55; --verde-cl:#e3f5ea; --amar:#c98a00; --amar-cl:#fff4d6; --verm:#d14343; --verm-cl:#fde6e6;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--fondo);color:var(--tinta);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
+button,input,select{font:inherit;color:inherit}
+header{position:sticky;top:0;z-index:5;background:var(--branco);border-bottom:1px solid var(--liña);padding:calc(10px + env(safe-area-inset-top)) 16px 10px;display:flex;align-items:center;gap:10px}
+header img{width:40px;height:40px}
+header h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.2px}
+header .sub{font-size:12px;color:var(--suave)}
+.chip{margin-left:auto;background:var(--azul-cl);color:var(--azul-esc);font-weight:700;font-size:13px;padding:4px 10px;border-radius:999px}
+main{max-width:560px;margin:0 auto;padding:16px 16px calc(96px + env(safe-area-inset-bottom))}
+section.pant{display:none}
+section.pant.on{display:block}
+h2{font-size:20px;margin:4px 0 12px}
+h3{font-size:16px;margin:18px 0 8px}
+.card{background:var(--branco);border:1px solid var(--liña);border-radius:16px;padding:16px;margin-bottom:14px}
+.campo{margin-bottom:14px}
+.campo label,.campo .lab{display:block;font-weight:600;margin-bottom:6px}
+.campo .axuda{font-size:13px;color:var(--suave);margin:-2px 0 6px}
+input[type=time],input[type=date],input[type=number],input[type=text],select{width:100%;padding:12px;border:1px solid var(--liña);border-radius:12px;background:var(--branco);font-size:17px;min-height:48px}
+input:focus,select:focus{outline:2px solid var(--azul);outline-offset:1px}
+.fila2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.step{display:flex;align-items:center;gap:8px}
+.step input{text-align:center}
+.step button{flex:0 0 48px;height:48px;border-radius:12px;border:1px solid var(--liña);background:var(--azul-cl);color:var(--azul-esc);font-size:22px;font-weight:700}
+.step .uni{flex:0 0 auto;color:var(--suave);font-size:14px}
+.escala{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.escala button,.pills button{border:1px solid var(--liña);background:var(--branco);border-radius:12px;padding:10px 4px;min-height:48px}
+.escala button b{display:block;font-size:18px}
+.escala button span{font-size:11px;color:var(--suave)}
+.escala button.on,.pills button.on{background:var(--azul);border-color:var(--azul);color:#fff}
+.escala button.on span{color:#e9f6ff}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pills button{padding:10px 14px;min-height:44px}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:14px;font-weight:700;font-size:17px;background:var(--azul);color:#fff;min-height:52px}
+.btn:active{transform:translateY(1px)}
+.btn.sec{background:var(--branco);color:var(--azul-esc);border:1px solid var(--azul)}
+.btn.wa{background:#1fa855}
+.btn.perigo{background:var(--branco);color:var(--verm);border:1px solid var(--verm)}
+.btn+.btn{margin-top:10px}
+.res{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.met{border-radius:14px;padding:12px;background:var(--fondo);border:1px solid var(--liña)}
+.met .k{font-size:12px;color:var(--suave)}
+.met .v{font-size:22px;font-weight:700}
+.met .n{font-size:12px;margin-top:2px}
+.met.g{background:var(--verde-cl);border-color:#bfe6cd}.met.g .n{color:var(--verde)}
+.met.a{background:var(--amar-cl);border-color:#f2dc9c}.met.a .n{color:var(--amar)}
+.met.r{background:var(--verm-cl);border-color:#f3c0c0}.met.r .n{color:var(--verm)}
+.lista{list-style:none;margin:0;padding:0}
+.lista li{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--liña)}
+.lista li:last-child{border-bottom:0}
+.lista .d{font-weight:600;min-width:96px}
+.lista .x{color:var(--suave);font-size:14px;flex:1}
+.lista button{border:0;background:none;color:var(--azul-esc);font-weight:600;padding:8px}
+.punto{width:10px;height:10px;border-radius:50%;flex:0 0 10px}
+.punto.g{background:var(--verde)}.punto.a{background:var(--amar)}.punto.r{background:var(--verm)}
+.nav-sem{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.nav-sem button{width:44px;height:44px;border-radius:12px;border:1px solid var(--liña);background:var(--branco);font-size:20px}
+.nav-sem button:disabled{opacity:.35}
+.nav-sem .t{font-weight:700;text-align:center}
+.barras{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:140px;margin:6px 0 4px;position:relative}
+.barras .b{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.barras .b i{display:block;width:70%;border-radius:6px 6px 2px 2px;background:var(--azul)}
+.barras .b i.baixo{background:var(--amar)}
+.barras .b i.sub{border-radius:0 0 2px 2px}
+.barras .b i.ex{background:#9fd6f4;border-radius:6px 6px 0 0}
+.barras .b small{font-size:11px;color:var(--suave);margin-top:4px}
+.barras .b em{font-style:normal;font-size:11px;font-weight:600;margin-bottom:2px}
+.liña7{position:absolute;left:0;right:0;border-top:1px dashed var(--suave);opacity:.6}
+.liña7 span{position:absolute;right:0;top:-16px;font-size:10px;color:var(--suave)}
+.aviso{background:var(--azul-cl);border:1px solid #bfe3f7;color:var(--tinta);border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:14px}
+.aviso.am{background:var(--amar-cl);border-color:#f2dc9c}
+.peq{font-size:13px;color:var(--suave)}
+.preg{padding:14px 0;border-bottom:1px solid var(--liña)}
+.preg:last-of-type{border-bottom:0}
+.preg .q{font-weight:600;margin-bottom:8px}
+.hab{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--liña)}
+.hab:last-child{border-bottom:0}
+.hab .tx{flex:1}
+.hab .tx b{display:block}
+.hab .tx span{font-size:14px;color:var(--suave)}
+.hab .cmb{font-size:13px;font-weight:600;white-space:nowrap}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--branco);border-top:1px solid var(--liña);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom)}
+nav button{border:0;background:none;padding:8px 0 10px;font-size:12px;color:var(--suave);display:flex;flex-direction:column;align-items:center;gap:2px;min-height:58px}
+nav button svg{width:24px;height:24px}
+nav button.on{color:var(--azul-esc);font-weight:700}
+#setup{position:fixed;inset:0;z-index:20;background:var(--branco);overflow:auto;padding:calc(24px + env(safe-area-inset-top)) 20px 32px;display:none}
+#setup.on{display:block}
+#setup .in{max-width:480px;margin:0 auto}
+#setup img{width:96px;height:96px;display:block;margin:0 auto 8px}
+#setup h1{text-align:center;font-size:22px;margin:0 0 4px}
+#setup p.c{text-align:center;color:var(--suave);margin:0 0 20px}
+.erro{color:var(--verm);font-size:14px;margin-top:6px;min-height:1em}
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:var(--tinta);color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:30;max-width:90vw;text-align:center}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+ol.inst{padding-left:20px;margin:6px 0}
+ol.inst li{margin-bottom:4px}
+</style>
+</head>
+<body>
+
+<header>
+  <img src="logo.png" alt="Díaita Barbanzana">
+  <div><h1>Sono</h1><div class="sub">Díaita Barbanzana</div></div>
+  <span class="chip" id="chipCod"></span>
+</header>
+
+<main>
+  <!-- REXISTRO -->
+  <section class="pant on" id="p-rexistro">
+    <div class="aviso" id="avisoInstalar" hidden></div>
+    <div class="aviso am" id="avisoHabitos" hidden>Toca revisar os teus hábitos deste mes. <a href="#" data-ir="habitos">Facelo agora</a></div>
+    <h2>Como durmiches?</h2>
+    <div class="card">
+      <div class="campo">
+        <label for="fData">Día no que espertaches</label>
+        <input type="date" id="fData">
+        <div class="peq" id="fDataTx"></div>
+      </div>
+      <div class="fila2">
+        <div class="campo"><label for="fDeitar">Deitácheste ás</label><input type="time" id="fDeitar"></div>
+        <div class="campo"><label for="fLevantar">Levantácheste ás</label><input type="time" id="fLevantar"></div>
+      </div>
+      <div class="campo">
+        <label for="fLat">Canto tardaches en durmir?</label>
+        <div class="step"><button type="button" data-st="fLat" data-d="-5">−</button><input type="number" id="fLat" inputmode="numeric" min="0" max="600" placeholder="—"><button type="button" data-st="fLat" data-d="5">+</button><span class="uni">min</span></div>
+      </div>
+      <div class="campo">
+        <label for="fEsp">Cantas veces espertaches?</label>
+        <div class="axuda">Conta só os espertares de máis de 5 minutos.</div>
+        <div class="step"><button type="button" data-st="fEsp" data-d="-1">−</button><input type="number" id="fEsp" inputmode="numeric" min="0" max="30" placeholder="—"><button type="button" data-st="fEsp" data-d="1">+</button><span class="uni">veces</span></div>
+      </div>
+      <div class="campo">
+        <label for="fWaso">Tempo esperto en total durante o sono</label>
+        <div class="axuda">Sumando todos os espertares, desde que durmiches ata que espertaches.</div>
+        <div class="step"><button type="button" data-st="fWaso" data-d="-5">−</button><input type="number" id="fWaso" inputmode="numeric" min="0" max="900" placeholder="—"><button type="button" data-st="fWaso" data-d="5">+</button><span class="uni">min</span></div>
+      </div>
+      <div class="campo">
+        <span class="lab">Como descansaches?</span>
+        <div class="escala" id="fDesc">
+          <button type="button" data-v="1"><b>1</b><span>Moi mal</span></button>
+          <button type="button" data-v="2"><b>2</b><span>Mal</span></button>
+          <button type="button" data-v="3"><b>3</b><span>Regular</span></button>
+          <button type="button" data-v="4"><b>4</b><span>Ben</span></button>
+          <button type="button" data-v="5"><b>5</b><span>Moi ben</span></button>
+        </div>
+      </div>
+      <div class="campo">
+        <span class="lab">Outros sonos neste día</span>
+        <div class="axuda">Sestas ou sono partido (por exemplo, se traballas de noite e dormes en dúas veces).</div>
+        <ul class="lista" id="extraLista"></ul>
+        <div id="extraForm" hidden>
+          <div class="fila2">
+            <div class="campo"><label for="xIni">Durmiches ás</label><input type="time" id="xIni"></div>
+            <div class="campo"><label for="xFin">Espertaches ás</label><input type="time" id="xFin"></div>
+          </div>
+          <button class="btn sec" id="bExtraOk">Engadir este sono</button>
+        </div>
+        <button class="btn sec" id="bExtra">+ Engadir outro sono</button>
+      </div>
+      <div class="erro" id="fErro"></div>
+      <button class="btn" id="bGardar">Gardar</button>
+      <button class="btn perigo" id="bBorrarNoite" hidden>Borrar este día</button>
+    </div>
+
+    <div class="card" id="resNoite" hidden>
+      <h3 style="margin-top:0">Resultado do sono principal</h3>
+      <div class="res" id="resGrid"></div>
+      <p class="peq" style="margin:10px 0 0">Verde: boa calidade · Amarelo: zona intermedia · Vermello: mellorable. Referencias da National Sleep Foundation (Ohayon 2017) e da AASM (Watson 2015). Non é un diagnóstico.</p>
+    </div>
+
+    <h3>Últimos días</h3>
+    <div class="card" style="padding:4px 16px"><ul class="lista" id="listaNoites"></ul></div>
+  </section>
+
+  <!-- SEMANA -->
+  <section class="pant" id="p-semana">
+    <div class="nav-sem">
+      <button id="semAnt" aria-label="Semana anterior">‹</button>
+      <div class="t" id="semTit"></div>
+      <button id="semSeg" aria-label="Semana seguinte">›</button>
+    </div>
+    <div class="card">
+      <div class="peq">Horas durmidas cada día (en claro, outros sonos)</div>
+      <div class="barras" id="barras"></div>
+    </div>
+    <div class="res" id="semRes" style="margin-bottom:14px"></div>
+    <button class="btn wa" id="bWaSem">Enviar resumo por WhatsApp</button>
+    <p class="peq" style="margin-top:10px">Envíase o resumo da semana que estás vendo, co teu código. Revisa antes que estean todos os días.</p>
+  </section>
+
+  <!-- HÁBITOS -->
+  <section class="pant" id="p-habitos">
+    <h2>Os teus hábitos</h2>
+    <div id="habResumo"></div>
+    <div class="card" id="habForm">
+      <p class="peq" style="margin-top:0">Responde pensando no que fas normalmente. Revísase ao comezar e unha vez ao mes.</p>
+      <div id="habPregs"></div>
+      <div class="erro" id="hErro"></div>
+      <button class="btn" id="bGardarHab">Gardar hábitos</button>
+    </div>
+  </section>
+
+  <!-- MÁIS -->
+  <section class="pant" id="p-mais">
+    <h2>Axustes</h2>
+    <div class="card">
+      <div class="campo"><span class="lab">O teu código</span><div id="axCod" style="font-size:18px;font-weight:700"></div></div>
+      <div class="campo">
+        <label for="axHorario">Horario de traballo</label>
+        <select id="axHorario">
+          <option value="dia">De día</option>
+          <option value="noite">De noite (fixo)</option>
+          <option value="quendas">Quendas rotativas</option>
+        </select>
+      </div>
+      <div class="campo" style="margin-bottom:0">
+        <label for="axIdade">Idade</label>
+        <select id="axIdade">
+          <option value="18-25">De 18 a 25 anos</option>
+          <option value="26-64">De 26 a 64 anos</option>
+          <option value="65">65 anos ou máis</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">Copia de seguridade</h3>
+      <p class="peq" style="margin-top:0">Os teus datos están só neste teléfono. Se cambias de móbil ou borras os datos do navegador, pérdense. Descarga unha copia de cando en vez.</p>
+      <button class="btn sec" id="bExport">Descargar copia</button>
+      <button class="btn sec" id="bImport">Restaurar copia</button>
+      <input type="file" id="fImport" accept="application/json,.json" hidden>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">Instalar no móbil</h3>
+      <button class="btn" id="bInstalar" hidden>Instalar app</button>
+      <p style="margin:8px 0 4px"><b>iPhone (Safari)</b></p>
+      <ol class="inst"><li>Preme o botón <b>Compartir</b> (cadrado coa frecha cara arriba).</li><li>Escolle <b>Engadir á pantalla de inicio</b>.</li><li>Abre sempre a app desde esa icona.</li></ol>
+      <p style="margin:8px 0 4px"><b>Android (Chrome)</b></p>
+      <ol class="inst"><li>Preme o menú <b>⋮</b> (arriba á dereita).</li><li>Escolle <b>Instalar app</b> ou <b>Engadir á pantalla de inicio</b>.</li></ol>
+      <p class="peq">En iPhone é importante instalala: se non, Safari pode borrar os datos se pasas uns días sen abrila.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">Privacidade</h3>
+      <p class="peq" style="margin:0">Esta app non ten servidor nin contas. O que rexistras queda só neste teléfono e só sae cando ti envías un resumo por WhatsApp, identificado co teu código. Esta app non diagnostica: se durmes mal de forma continuada, ronca moito ou tes moito sono durante o día, coméntao co teu médico.</p>
+    </div>
+
+    <button class="btn perigo" id="bBorrarTodo">Borrar todos os datos</button>
+  </section>
+</main>
+
+<nav>
+  <button data-ir="rexistro" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Rexistro</button>
+  <button data-ir="semana"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Semana</button>
+  <button data-ir="habitos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg>Hábitos</button>
+  <button data-ir="mais"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Máis</button>
+</nav>
+
+<!-- CONFIGURACIÓN INICIAL -->
+<div id="setup">
+  <div class="in">
+    <img src="logo.png" alt="">
+    <h1>Benvido/a</h1>
+    <p class="c">Rexistro do sono · Díaita Barbanzana</p>
+    <div class="card">
+      <div class="campo">
+        <label for="sCod">O teu código</label>
+        <div class="axuda">Dáchelo Raúl na consulta (por exemplo, DB-014).</div>
+        <input type="text" id="sCod" placeholder="DB-000" autocapitalize="characters" autocomplete="off">
+      </div>
+      <div class="campo">
+        <label for="sIdade">Idade</label>
+        <select id="sIdade">
+          <option value="">Escolle…</option>
+          <option value="18-25">De 18 a 25 anos</option>
+          <option value="26-64">De 26 a 64 anos</option>
+          <option value="65">65 anos ou máis</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="sHorario">Horario de traballo</label>
+        <select id="sHorario">
+          <option value="">Escolle…</option>
+          <option value="dia">De día</option>
+          <option value="noite">De noite (fixo)</option>
+          <option value="quendas">Quendas rotativas</option>
+        </select>
+      </div>
+      <div class="erro" id="sErro"></div>
+      <button class="btn" id="bSetup">Comezar</button>
+    </div>
+    <p class="peq" style="text-align:center">Os teus datos quedan só neste teléfono. Non fai falta conta.</p>
+    <button class="btn sec" id="bSetupImport">Teño unha copia de seguridade</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+var K='diaita-sono-v1', WA='34690918040';
+var D=load();
+try{ if(navigator.storage&&navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+
+function base(){return {v:1,codigo:null,idade:null,rexistros:{},habitos:[]};}
+function load(){ try{ var x=JSON.parse(localStorage.getItem(K)); if(x&&x.rexistros) return x; }catch(e){} return base(); }
+function save(){ try{ localStorage.setItem(K,JSON.stringify(D)); return true; }catch(e){ toast('Non se puido gardar neste navegador'); return false; } }
+function $(id){return document.getElementById(id);}
+function toast(t){var e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(function(){e.classList.remove('on');},2600);}
+
+/* ---------- datas ---------- */
+var DS=['dom','lun','mar','mér','xov','ven','sáb'], DL=['domingo','luns','martes','mércores','xoves','venres','sábado'];
+function pad(n){return (n<10?'0':'')+n;}
+function iso(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function deIso(s){var p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+function hoxe(){return iso(new Date());}
+function sumaDias(s,n){var d=deIso(s);d.setDate(d.getDate()+n);return iso(d);}
+function dm(s){var d=deIso(s);return pad(d.getDate())+'/'+pad(d.getMonth()+1);}
+function dma(s){return dm(s)+'/'+deIso(s).getFullYear();}
+function luns(s){var d=deIso(s),w=(d.getDay()+6)%7;d.setDate(d.getDate()-w);return iso(d);}
+function min(t){var p=t.split(':');return (+p[0])*60+(+p[1]);}
+function hm(m){m=Math.round(m);var h=Math.floor(m/60),r=m%60;return h+' h '+pad(r);}
+function hmC(m){m=Math.round(m);return Math.floor(m/60)+'h'+pad(m%60);}
+
+/* ---------- cálculos ---------- */
+function calc(r){
+  var tib=min(r.levantar)-min(r.deitar); if(tib<=0) tib+=1440;
+  var sono=tib-r.lat-r.waso;
+  return {tib:tib,sono:sono,ef:sono>0?Math.round(sono/tib*100):0};
+}
+/* Ohayon et al. 2017 (NSF), contrastado co orixinal; horas: Watson 2015 (AASM) */
+function cor(tipo,v,id){
+  var m=id==='65',n=id==='18-25';
+  if(tipo==='lat') return v<=30?'g':(m?(v>60?'r':'a'):(v>=46?'r':'a'));
+  if(tipo==='esp') return v<=(m?2:1)?'g':(v>=4?'r':'a');
+  if(tipo==='waso') return v<=20?'g':(v>=(m?51:41)?'r':'a');
+  if(tipo==='ef') return v>=85?'g':(v<=(n?64:74)?'r':'a');
+  if(tipo==='sono') return v>=420?'g':'r';
+  return '';
+}
+var NOTA={g:'Bo',a:'Intermedio',r:'Mellorable'};
+function met(k,v,c,nota){return '<div class="met '+(c||'')+'"><div class="k">'+k+'</div><div class="v">'+v+'</div>'+(c?'<div class="n">'+(nota||NOTA[c])+'</div>':(nota?'<div class="n">'+nota+'</div>':''))+'</div>';}
+
+/* ---------- navegación ---------- */
+function ir(p){
+  document.querySelectorAll('section.pant').forEach(function(s){s.classList.toggle('on',s.id==='p-'+p);});
+  document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-ir')===p);});
+  if(p==='semana') pintaSemana(); if(p==='habitos') pintaHabitos(); if(p==='mais') pintaMais(); if(p==='rexistro') pintaRexistro();
+  window.scrollTo(0,0);
+}
+document.addEventListener('click',function(e){var t=e.target.closest('[data-ir]');if(t){e.preventDefault();ir(t.getAttribute('data-ir'));}});
+
+/* ---------- configuración inicial ---------- */
+function normCod(s){s=(s||'').toUpperCase().replace(/\s/g,'');var m=s.match(/^DB-?(\d{1,4})$/);return m?'DB-'+(m[1].length<3?('00'+m[1]).slice(-3):m[1]):null;}
+$('bSetup').onclick=function(){
+  var c=normCod($('sCod').value),i=$('sIdade').value,h=$('sHorario').value;
+  if(!c){$('sErro').textContent='Escribe o código tal como cho deu Raúl (DB e un número).';return;}
+  if(!i){$('sErro').textContent='Escolle o tramo de idade.';return;}
+  if(!h){$('sErro').textContent='Escolle o teu horario de traballo.';return;}
+  D.codigo=c;D.idade=i;D.horario=h;save();$('setup').classList.remove('on');arrancar();
+};
+function arrancar(){ $('chipCod').textContent=D.codigo; pintaRexistro(); }
+
+/* ---------- rexistro ---------- */
+var desc=null;
+$('fDesc').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;desc=+b.getAttribute('data-v');marcaDesc();});
+function marcaDesc(){document.querySelectorAll('#fDesc button').forEach(function(b){b.classList.toggle('on',+b.getAttribute('data-v')===desc);});}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-st]'); if(!b) return;
+  var inp=$(b.getAttribute('data-st')),d=+b.getAttribute('data-d');
+  inp.value=Math.max(0,(inp.value===''?0:+inp.value)+d); if(inp.id==='fEsp') autoWaso();
+});
+$('fEsp').addEventListener('input',autoWaso);
+function autoWaso(){ if($('fEsp').value==='0'&&$('fWaso').value==='') $('fWaso').value=0; }
+$('fData').addEventListener('change',function(){cargaNoite($('fData').value);});
+
+function cargaNoite(data){
+  if(!data) return;
+  $('fData').value=data;
+  var dd=deIso(data);
+  $('fDataTx').textContent='Sono que remataches o '+DL[dd.getDay()]+' '+dd.getDate();
+  var r=D.rexistros[data]; $('fErro').textContent='';
+  if(r){ $('fDeitar').value=r.deitar;$('fLevantar').value=r.levantar;$('fLat').value=r.lat;$('fEsp').value=r.esp;$('fWaso').value=r.waso;desc=r.desc;extras=(r.extra||[]).slice();$('bGardar').textContent='Actualizar';$('bBorrarNoite').hidden=false;mostraRes(r);}
+  else{
+    var ult=ultimo(); $('fDeitar').value=ult?ult.deitar:'';$('fLevantar').value=ult?ult.levantar:'';
+    $('fLat').value='';$('fEsp').value='';$('fWaso').value='';desc=null;extras=[];$('bGardar').textContent='Gardar';$('bBorrarNoite').hidden=true;$('resNoite').hidden=true;
+  }
+  $('extraForm').hidden=true;$('bExtra').hidden=false;
+  marcaDesc(); pintaExtras();
+}
+function ultimo(){var k=Object.keys(D.rexistros).sort();return k.length?D.rexistros[k[k.length-1]]:null;}
+function num(id){var v=$(id).value;if(v===''||isNaN(+v))return null;return Math.round(+v);}
+
+/* outros sonos (sesta ou sono partido): só inicio e fin */
+var extras=[];
+function durX(x){var d=min(x.fin)-min(x.ini);if(d<=0)d+=1440;return d;}
+function pintaExtras(){
+  $('extraLista').innerHTML=extras.map(function(x,i){return '<li><span class="x">'+x.ini+'–'+x.fin+' · '+hmC(durX(x))+'</span><button type="button" data-xb="'+i+'">Quitar</button></li>';}).join('');
+}
+$('bExtra').onclick=function(){$('xIni').value='';$('xFin').value='';$('extraForm').hidden=false;this.hidden=true;};
+$('bExtraOk').onclick=function(){
+  var x={ini:$('xIni').value,fin:$('xFin').value};
+  if(!x.ini||!x.fin){$('fErro').textContent='Indica a que hora durmiches e espertaches nese sono.';return;}
+  if(durX(x)>12*60){$('fErro').textContent='Revisa as horas dese sono: sae máis de 12 h.';return;}
+  $('fErro').textContent='';extras.push(x);pintaExtras();$('extraForm').hidden=true;$('bExtra').hidden=false;
+  if(D.rexistros[$('fData').value]) $('fErro').textContent='Preme «Actualizar» para gardar o cambio.';
+};
+$('extraLista').addEventListener('click',function(e){var b=e.target.closest('[data-xb]');if(!b)return;extras.splice(+b.getAttribute('data-xb'),1);pintaExtras();if(D.rexistros[$('fData').value])$('fErro').textContent='Preme «Actualizar» para gardar o cambio.';});
+
+$('bGardar').onclick=function(){
+  var e=$('fErro'),data=$('fData').value,r={deitar:$('fDeitar').value,levantar:$('fLevantar').value,lat:num('fLat'),esp:num('fEsp'),waso:num('fWaso'),desc:desc,extra:extras.slice()};
+  if(!data){e.textContent='Escolle a data.';return;}
+  if(data>hoxe()){e.textContent='A data non pode ser futura.';return;}
+  if(!r.deitar||!r.levantar){e.textContent='Indica a hora de deitarte e de levantarte.';return;}
+  if(r.lat===null){e.textContent='Indica canto tardaches en durmir (0 se foi ao momento).';return;}
+  if(r.esp===null){e.textContent='Indica cantas veces espertaches (0 se ningunha).';return;}
+  if(r.waso===null){e.textContent='Indica o tempo esperto durante o sono (0 se nada).';return;}
+  if(r.esp>0&&r.waso===0){e.textContent='Se espertaches máis de 5 min, o tempo esperto non pode ser 0.';return;}
+  if(!r.desc){e.textContent='Indica como descansaches (1 a 5).';return;}
+  var c=calc(r);
+  if(c.tib>16*60){e.textContent='Revisa as horas: sae máis de 16 h na cama.';return;}
+  if(c.sono<=0){e.textContent='Revisa os datos: o tempo en durmir e esperto supera o tempo na cama.';return;}
+  e.textContent='';
+  if(!r.extra.length) delete r.extra;
+  var novo=!D.rexistros[data]; D.rexistros[data]=r;
+  if(save()){toast(novo?'Gardado':'Actualizado');$('bGardar').textContent='Actualizar';$('bBorrarNoite').hidden=false;mostraRes(r);pintaLista();}
+};
+$('bBorrarNoite').onclick=function(){
+  var d=$('fData').value; if(!D.rexistros[d]) return;
+  if(!confirm('Borrar o rexistro do '+dm(d)+'?')) return;
+  delete D.rexistros[d];save();toast('Rexistro borrado');cargaNoite(d);pintaLista();
+};
+function totalDia(r){return calc(r).sono+(r.extra||[]).reduce(function(s,x){return s+durX(x);},0);}
+function mostraRes(r){
+  var c=calc(r),id=D.idade,t=totalDia(r),ex=(r.extra||[]).length;
+  $('resGrid').innerHTML=
+    met(ex?'Total do día':'Durmiches',hm(t),t>=420?'g':'r',(t>=420?'7 h ou máis':'Menos de 7 h')+(ex?' · '+hm(c.sono)+' no principal':''))+
+    met('Eficiencia',c.ef+' %',cor('ef',c.ef,id))+
+    met('Tardaches en durmir',r.lat+' min',cor('lat',r.lat,id))+
+    met('Espertares (> 5 min)',r.esp,cor('esp',r.esp,id))+
+    met('Tempo esperto',r.waso+' min',cor('waso',r.waso,id))+
+    met('Tempo na cama',hm(c.tib),'');
+  $('resNoite').hidden=false;
+}
+function peorCor(r){var c=calc(r),id=D.idade,l=[totalDia(r)>=420?'g':'r',cor('ef',c.ef,id),cor('lat',r.lat,id),cor('esp',r.esp,id),cor('waso',r.waso,id)];return l.indexOf('r')>=0?'r':(l.indexOf('a')>=0?'a':'g');}
+function pintaLista(){
+  var k=Object.keys(D.rexistros).sort().reverse().slice(0,14),h='';
+  if(!k.length) h='<li><span class="x">Aínda non hai días rexistrados.</span></li>';
+  k.forEach(function(d){var r=D.rexistros[d],c=calc(r),dd=deIso(d),ex=(r.extra||[]).length;
+    h+='<li><span class="punto '+peorCor(r)+'"></span><span class="d">'+DS[dd.getDay()]+' '+dm(d)+'</span><span class="x">'+hmC(totalDia(r))+(ex?' (+'+ex+' sono'+(ex>1?'s':'')+')':'')+' · '+c.ef+' % · descanso '+r.desc+'/5</span><button data-ed="'+d+'">Editar</button></li>';});
+  $('listaNoites').innerHTML=h;
+}
+$('listaNoites').addEventListener('click',function(e){var b=e.target.closest('[data-ed]');if(b){cargaNoite(b.getAttribute('data-ed'));window.scrollTo({top:0,behavior:'smooth'});}});
+function pintaRexistro(){
+  $('fData').max=hoxe();
+  if(!$('fData').value) cargaNoite(hoxe());
+  pintaLista(); avisos();
+}
+
+/* ---------- semana ---------- */
+var semIni=luns(hoxe()),BASE=20;
+$('semAnt').onclick=function(){semIni=sumaDias(semIni,-7);pintaSemana();};
+$('semSeg').onclick=function(){semIni=sumaDias(semIni,7);pintaSemana();};
+/* desviación estándar circular (en min), válida para calquera horario, tamén cruzando a medianoite */
+function sdC(a){if(a.length<2)return null;var s=0,c=0;a.forEach(function(m){var t=m/1440*2*Math.PI;s+=Math.sin(t);c+=Math.cos(t);});
+  var R=Math.min(1,Math.sqrt(s*s+c*c)/a.length);return R>=1?0:Math.sqrt(-2*Math.log(R))*1440/(2*Math.PI);}
+var HOR={dia:'De día',noite:'De noite (fixo)',quendas:'Quendas rotativas'};
+function datosSemana(ini){
+  var dias=[],rs=[];
+  for(var i=0;i<7;i++){var d=sumaDias(ini,i),r=D.rexistros[d];dias.push({d:d,r:r});if(r)rs.push(r);}
+  var o={dias:dias,n:rs.length};
+  if(!rs.length) return o;
+  var cs=rs.map(calc),ts=rs.map(totalDia);
+  o.media=ts.reduce(function(s,x){return s+x;},0)/ts.length;
+  o.baixo=ts.filter(function(x){return x<420;}).length;
+  o.nex=rs.filter(function(r){return (r.extra||[]).length;}).length;
+  o.ef=Math.round(cs.reduce(function(s,c){return s+c.sono;},0)/cs.reduce(function(s,c){return s+c.tib;},0)*100);
+  o.desc=rs.reduce(function(s,r){return s+r.desc;},0)/rs.length;
+  o.sdD=sdC(rs.map(function(r){return min(r.deitar);}));
+  o.sdL=sdC(rs.map(function(r){return min(r.levantar);}));
+  return o;
+}
+function pintaSemana(){
+  var fin=sumaDias(semIni,6),o=datosSemana(semIni);
+  $('semTit').innerHTML='Semana<br><span class="peq">'+dm(semIni)+' – '+dma(fin)+'</span>';
+  $('semSeg').disabled=sumaDias(semIni,7)>hoxe();
+  var mx=600,h='<div class="liña7" style="bottom:'+Math.round(BASE+420/mx*96)+'px"><span>7 h</span></div>';
+  o.dias.forEach(function(x){var dd=deIso(x.d);
+    if(!x.r){h+='<div class="b"><em class="peq">—</em><small>'+DS[dd.getDay()]+'</small></div>';return;}
+    var p=calc(x.r).sono,t=totalDia(x.r),k=96/mx,ap=Math.max(4,Math.min(p,mx)*k),ae=Math.max(0,Math.min(t,mx)*k-ap);
+    h+='<div class="b"><em>'+hmC(t)+'</em>'+(ae>0?'<i class="ex" style="height:'+ae+'px"></i>':'')+'<i class="'+(t<420?'baixo':'')+(ae>0?' sub':'')+'" style="height:'+ap+'px"></i><small>'+DS[dd.getDay()]+'</small></div>';});
+  $('barras').innerHTML=h;
+  if(!o.n){$('semRes').innerHTML='<div class="met" style="grid-column:1/-1">Non hai días rexistrados esta semana.</div>';$('bWaSem').disabled=true;return;}
+  $('bWaSem').disabled=false;
+  $('semRes').innerHTML=
+    met('Días rexistrados',o.n+'/7','')+
+    met('Media durmida',hm(o.media),o.media>=420?'g':'r',(o.media>=420?'7 h ou máis':'Menos de 7 h')+(o.nex?' (con outros sonos)':''))+
+    met('Días con menos de 7 h',o.baixo+' de '+o.n,o.baixo===0?'g':'',o.baixo===0?'Ningún':'')+
+    met('Eficiencia media',o.ef+' %',cor('ef',o.ef,D.idade),'Sono principal · '+NOTA[cor('ef',o.ef,D.idade)])+
+    met('Regularidade',o.sdD===null?'—':'± '+Math.round(o.sdD)+' / ± '+Math.round(o.sdL)+' min','',o.sdD===null?'Fan falta 2 días':'Deitarse / levantarse')+
+    met('Descanso medio',o.desc.toFixed(1).replace('.',',')+'/5','');
+}
+function textoSemana(){
+  var o=datosSemana(semIni),fin=sumaDias(semIni,6),L=[],hor=D.horario||'dia';
+  L.push('🌙 SONO '+D.codigo+' · semana '+dm(semIni)+'–'+dma(fin));
+  L.push('Idade: '+(D.idade==='65'?'65+':D.idade)+' · Horario: '+HOR[hor]);
+  if(hor!=='dia') L.push('⚠️ Traballo nocturno/quendas: os cortes de referencia son de persoas que dormen de noite; interpretar con prudencia.');
+  L.push('Días rexistrados: '+o.n+'/7');
+  L.push('Media durmida (total do día): '+hm(o.media));
+  L.push('Días < 7 h: '+o.baixo+' de '+o.n);
+  if(o.nex) L.push('Días con outros sonos (sesta/sono partido): '+o.nex);
+  L.push('Eficiencia media (sono principal): '+o.ef+' %');
+  L.push('Regularidade (DE circular, sono principal): deitarse ± '+(o.sdD===null?'—':Math.round(o.sdD)+' min')+' · levantarse ± '+(o.sdL===null?'—':Math.round(o.sdL)+' min'));
+  L.push('Descanso medio: '+o.desc.toFixed(1).replace('.',',')+'/5');
+  L.push('');L.push('Detalle sono principal (deitarse–levantarse · durmido · eficiencia · latencia · espertares · tempo esperto · descanso) + outros sonos:');
+  o.dias.forEach(function(x){var dd=deIso(x.d);if(x.d>hoxe())return;if(!x.r){L.push(DS[dd.getDay()]+' '+dm(x.d)+': sen rexistro');return;}var r=x.r,c=calc(r);
+    var t=DS[dd.getDay()]+' '+dm(x.d)+': '+r.deitar+'–'+r.levantar+' · '+hmC(c.sono)+' · '+c.ef+' % · '+r.lat+' min · '+r.esp+' · '+r.waso+' min · '+r.desc+'/5';
+    (r.extra||[]).forEach(function(e){t+=' + sono '+e.ini+'–'+e.fin+' ('+hmC(durX(e))+')';});
+    if(r.extra&&r.extra.length) t+=' = total '+hmC(totalDia(r));
+    L.push(t);});
+  return L.join('\n');
+}
+function abreWA(t){window.location.href='https://wa.me/'+WA+'?text='+encodeURIComponent(t);}
+$('bWaSem').onclick=function(){if(!datosSemana(semIni).n)return;abreWA(textoSemana());};
+
+/* ---------- hábitos ---------- */
+var HAB=[
+ {id:'pantallas',q:'Canto antes de deitarte deixas o móbil, a tablet ou a TV?',o:['Ata que durmo','30 min antes','1 h antes','2 h antes','Máis de 2 h antes'],ok:[2,3,4]},
+ {id:'escuro',q:'O teu dormitorio está escuro?',o:['Si','Non'],ok:[0]},
+ {id:'silencioso',q:'O teu dormitorio está silencioso?',o:['Si','Non'],ok:[0]},
+ {id:'fresco',q:'O teu dormitorio está fresco?',o:['Si','Non'],ok:[0]},
+ {id:'cea',q:'Canto tempo pasa entre a última comida importante e deitarte?',o:['Menos de 30 min','30–60 min','1–2 h','2–3 h','Máis de 3 h'],ok:[3,4]},
+ {id:'cafeina',q:'Canto antes de deitarte tomas a última bebida con cafeína (café, té, refrescos de cola, bebidas enerxéticas)?',o:['Non tomo','Máis de 8 h antes','6–8 h antes','4–6 h antes','Menos de 4 h antes'],ok:[0,1,2]},
+ {id:'alcol',q:'Nas 3 horas antes de deitarte, tomas alcol ou fumas?',o:['Nunca','Algún día','Case todos os días'],ok:[0]},
+ {id:'exercicio',q:'Canto antes de deitarte rematas o exercicio intenso?',o:['Non adestro pola noite','Máis de 3 h antes','2–3 h antes','1–2 h antes','Menos de 1 h antes'],ok:[0,1,2,3]}
+];
+var CURTO={pantallas:'Pantallas',escuro:'Dormitorio escuro',silencioso:'Dormitorio silencioso',fresco:'Dormitorio fresco',cea:'Última comida',cafeina:'Cafeína',alcol:'Alcol / tabaco',exercicio:'Exercicio intenso'};
+var hResp={};
+function pintaHabitos(){
+  var h='';
+  HAB.forEach(function(p){h+='<div class="preg"><div class="q">'+p.q+'</div><div class="pills" data-h="'+p.id+'">';p.o.forEach(function(t,i){h+='<button type="button" data-i="'+i+'"'+(hResp[p.id]===i?' class="on"':'')+'>'+t+'</button>';});h+='</div></div>';});
+  $('habPregs').innerHTML=h;
+  var l=D.habitos,ult=l[l.length-1],ant=l[l.length-2];
+  if(!ult){$('habResumo').innerHTML='<div class="aviso">Responde estas preguntas para ver os teus hábitos de sono. Repetirémolo unha vez ao mes.</div>';return;}
+  var r='<div class="card"><div class="peq">Última revisión: '+dma(ult.data)+(ant?' · comparado co '+dma(ant.data):'')+'</div>';
+  HAB.forEach(function(p){var v=ult.r[p.id],ok=p.ok.indexOf(v)>=0,cm='';
+    if(ant&&ant.r[p.id]!==undefined&&ant.r[p.id]!==v){var aok=p.ok.indexOf(ant.r[p.id])>=0;cm=ok&&!aok?'<span class="cmb" style="color:var(--verde)">▲ mellora</span>':(!ok&&aok?'<span class="cmb" style="color:var(--amar)">▼ empeora</span>':'<span class="cmb peq">cambiou</span>');}
+    r+='<div class="hab"><span class="punto '+(ok?'g':'a')+'" style="margin-top:6px"></span><div class="tx"><b>'+CURTO[p.id]+'</b><span>'+p.o[v]+'</span></div>'+cm+'</div>';});
+  r+='<button class="btn wa" id="bWaHab" style="margin-top:12px">Enviar hábitos por WhatsApp</button></div><h3>Volver responder</h3>';
+  $('habResumo').innerHTML=r;
+  $('bWaHab').onclick=function(){abreWA(textoHabitos());};
+}
+$('habPregs').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var g=b.parentNode,id=g.getAttribute('data-h');hResp[id]=+b.getAttribute('data-i');g.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b);});});
+$('bGardarHab').onclick=function(){
+  var falta=HAB.filter(function(p){return hResp[p.id]===undefined;});
+  if(falta.length){$('hErro').textContent='Falta responder: '+falta.map(function(p){return CURTO[p.id];}).join(', ')+'.';return;}
+  $('hErro').textContent='';var r={};HAB.forEach(function(p){r[p.id]=hResp[p.id];});
+  var d=hoxe(),l=D.habitos; if(l.length&&l[l.length-1].data===d) l[l.length-1].r=r; else l.push({data:d,r:r});
+  if(save()){hResp={};toast('Hábitos gardados');pintaHabitos();window.scrollTo({top:0,behavior:'smooth'});}
+};
+function textoHabitos(){
+  var l=D.habitos,u=l[l.length-1],a=l[l.length-2],L=['🛏️ HÁBITOS SONO '+D.codigo+' · '+dma(u.data)];
+  HAB.forEach(function(p){var v=u.r[p.id];L.push((p.ok.indexOf(v)>=0?'✅ ':'⚠️ ')+CURTO[p.id]+': '+p.o[v]+(a&&a.r[p.id]!==undefined&&a.r[p.id]!==v?' (antes: '+p.o[a.r[p.id]]+')':''));});
+  return L.join('\n');
+}
+
+/* ---------- avisos ---------- */
+var evInst=null;
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();evInst=e;$('bInstalar').hidden=false;avisos();});
+$('bInstalar').onclick=function(){if(evInst){evInst.prompt();evInst=null;$('bInstalar').hidden=true;}};
+function instalada(){return (window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;}
+function avisos(){
+  var a=$('avisoInstalar');
+  if(!instalada()){a.innerHTML='Garda esta app na pantalla de inicio para non perder os datos. <a href="#" data-ir="mais">Como facelo</a>';a.hidden=false;} else a.hidden=true;
+  var l=D.habitos,u=l[l.length-1];
+  $('avisoHabitos').hidden=!(Object.keys(D.rexistros).length&&(!u||(new Date()-deIso(u.data))>30*864e5));
+}
+
+/* ---------- axustes ---------- */
+function pintaMais(){$('axCod').textContent=D.codigo;$('axIdade').value=D.idade;$('axHorario').value=D.horario||'dia';}
+$('axHorario').onchange=function(){D.horario=this.value;save();toast('Horario actualizado');};
+$('axIdade').onchange=function(){D.idade=this.value;save();toast('Idade actualizada');};
+$('bExport').onclick=function(){
+  var b=new Blob([JSON.stringify(D,null,1)],{type:'application/json'}),a=document.createElement('a'),d=deIso(hoxe());
+  a.href=URL.createObjectURL(b);a.download='sono_'+D.codigo+'_'+pad(d.getDate())+'-'+pad(d.getMonth()+1)+'-'+d.getFullYear()+'.json';
+  document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1000);
+};
+function pideImport(){$('fImport').click();}
+$('bImport').onclick=pideImport;$('bSetupImport').onclick=pideImport;
+$('fImport').onchange=function(){
+  var f=this.files[0];if(!f)return;var rd=new FileReader();
+  rd.onload=function(){try{var x=JSON.parse(rd.result);if(!x||!x.rexistros||!x.codigo)throw 0;
+    if(D.codigo&&Object.keys(D.rexistros).length&&!confirm('Substituír os datos actuais pola copia?'))return;
+    x.habitos=x.habitos||[];D=x;save();$('setup').classList.remove('on');toast('Copia restaurada');arrancar();$('fData').value='';ir('rexistro');
+  }catch(e){toast('Ese arquivo non é unha copia válida');}};
+  rd.readAsText(f);this.value='';
+};
+$('bBorrarTodo').onclick=function(){
+  if(!confirm('Borrar TODOS os datos deste teléfono? Non se pode desfacer.'))return;
+  try{localStorage.removeItem(K);}catch(e){} D=base();location.reload();
+};
+
+/* ---------- inicio ---------- */
+if(!D.codigo){$('setup').classList.add('on');} else arrancar();
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}
+})();
+</script>
+</body>
+</html>
